@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="surprise-container">
+
+    <h1 class="surprise-title">A Little Surprise For You 🎁</h1>
+
+    <p class="surprise-text">Click the heart to reveal something special…</p>
+
+    <div class="heart-wrapper" onclick="reveal()">
+        <div class="heart">❤️</div>
+    </div>
+
+    <div id="hidden-message" class="hidden-message">
+        <h2>You Are My Favorite Person In The World 💛</h2>
+        <p>
+            Every moment with you feels warm, soft, and full of meaning.
+            <br><br>
+            I prepared something special just for our 1-year anniversary.
+        </p>
+
+        <!-- Secret game link (we will activate after website is done) -->
+        <a id="secret-link" href="/game_start" class="secret-button">
+            Your Secret Surprise 💣
+        </a>
+
+        <a href="/backgammon" class="secret-button">
+            Play Backgammon 🎲 (Online)
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+    function reveal() {
+        document.getElementById("hidden-message").style.display = "block";
+        document.querySelector(".heart").classList.add("pop");
+    }
+</script>
+
+{% endblock %}

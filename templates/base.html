@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="nav-bar">
+        <a href="/">Home
+        </a>
+        <a href="/story">Our Story</a>
+        <a href="/gallery">Gallery</a>
+        <a href="/letter">Letter</a>
+        <a href="/surprise">Surprise</a>
+    </nav>
+
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+
+</html>

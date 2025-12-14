@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="gallery-header">
+    <h1>Our Moments 📸</h1>
+    <p>17 memories from 365 days together 💛</p>
+</div>
+
+<div class="gallery-grid">
+
+    <!-- Berlin (1-3) -->
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic1.jpg') }}">
+        <p class="caption">Berlin — memory 1 🇩🇪</p>
+    </div>
+
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic2.jpg') }}">
+        <p class="caption">Berlin — memory 2 🇩🇪</p>
+    </div>
+
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic3.jpg') }}">
+        <p class="caption">Berlin — memory 3 🇩🇪</p>
+    </div>
+
+    <!-- Corporate party (4-5) -->
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic4.jpg') }}">
+        <p class="caption">Corporate party — moment 1 🤍</p>
+    </div>
+
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic5.jpg') }}">
+        <p class="caption">Corporate party — moment 2 🤍</p>
+    </div>
+
+    <!-- Mtawminda (6-8) -->
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic6.jpg') }}">
+        <p class="caption">Mtawminda — moment 1 🌙</p>
+    </div>
+
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic7.jpg') }}">
+        <p class="caption">Mtawminda — moment 2 🌙</p>
+    </div>
+
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic8.jpg') }}">
+        <p class="caption">Mtawminda — moment 3 🌙</p>
+    </div>
+
+    <!-- Valentine’s (9-10) -->
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic9.jpg') }}">
+        <p class="caption">One day before our first Valentine's 💐</p>
+    </div>
+
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic10.jpg') }}">
+        <p class="caption">Our first Valentine's Day ❤️</p>
+    </div>
+
+    <!-- Old favorite pictures (11-12) -->
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic11.jpg') }}">
+        <p class="caption">One of my all-time favorite photos of you ✨</p>
+    </div>
+
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic12.jpg') }}">
+        <p class="caption">Old house — old but priceless 🤎</p>
+    </div>
+
+    <!-- Lisi photobooth (13) -->
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic13.jpg') }}">
+        <p class="caption">Lisi Lake — photobooth moment 📷💛</p>
+    </div>
+
+    <!-- NEW (14-17) -->
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic14.jpg') }}">
+        <p class="caption">Metro photo — one of my sweetest memories of us.</p>
+    </div>
+
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic15.jpg') }}">
+        <p class="caption">Old house after you moved — warm, emotional day.</p>
+    </div>
+
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic16.jpg') }}">
+        <p class="caption">Sisauri coffee — your favorite, my happiness.</p>
+    </div>
+
+    <div class="photo-card">
+        <img src="{{ url_for('static', filename='img/pic17.jpg') }}">
+        <p class="caption">Berlin hug — 5 minutes after I saw you. I’ll never forget it.</p>
+    </div>
+
+</div>
+<!-- LIGHTBOX POPUP -->
+<div id="lightbox" class="lightbox">
+    <img id="lightbox-img" src="">
+</div>
+
+<script>
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+
+    document.querySelectorAll(".photo-card img").forEach(img => {
+        img.addEventListener("click", () => {
+            lightboxImg.src = img.src;
+            lightbox.classList.add("active");
+        });
+    });
+
+    // Close when clicking anywhere
+    lightbox.addEventListener("click", () => {
+        lightbox.classList.remove("active");
+    });
+</script>
+
+{% endblock %}

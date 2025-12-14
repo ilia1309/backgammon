@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="game-container">
+    <h1>Bomb Hunt 🎮</h1>
+
+    <p class="game-hp">
+        Your HP: {{ your_hp }} &nbsp;&nbsp;|&nbsp;&nbsp; Her HP: {{ her_hp }}
+    </p>
+
+    <p class="game-turn">
+        Turn: {% if turn == 1 %}<strong>Ilia</strong> (click on your own grid)
+        {% else %}<strong>Salome</strong> (Salome clicks on her own grid){% endif %}
+    </p>
+
+    <div class="boards">
+        <div class="board">
+            <h2>Your Grid</h2>
+            <div class="game-grid">
+                {% for i in range(9) %}
+                {% set clicked = i in your_moves %}
+                {% set is_bomb = i in your_bombs %}
+                <div class="game-cell">
+                    {% if turn == 1 and not clicked %}
+                    <a href="{{ url_for('pick', tile=i) }}" class="cell-button"></a>
+                    {% else %}
+                    {% if clicked and is_bomb %}
+                    💣
+                    {% elif clicked %}
+                    ✓
+                    {% else %}
+                    &nbsp;
+                    {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="board">
+            <h2>Her Grid</h2>
+            <div class="game-grid">
+                {% for i in range(9) %}
+                {% set clicked = i in her_moves %}
+                {% set is_bomb = i in her_bombs %}
+                <div class="game-cell">
+                    {% if turn == 2 and not clicked %}
+                    <a href="{{ url_for('pick', tile=i) }}" class="cell-button"></a>
+                    {% else %}
+                    {% if clicked and is_bomb %}
+                    💣
+                    {% elif clicked %}
+                    ✓
+                    {% else %}
+                    &nbsp;
+                    {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <p class="game-note">
+        On your turn, click a square on your own grid. If you hit a bomb that
+        your partner placed for you, you lose 1 HP. First to reach 0 HP loses. 💔
+    </p>
+
+    <a href="{{ url_for('game_start') }}" class="secret-button">Restart Game</a>
+</div>
+
+{% endblock %}

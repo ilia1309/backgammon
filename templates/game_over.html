@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="game-over">
+    <h1>Game Over 💔</h1>
+
+    {% if loser == "You" %}
+    <p>ilia hit all the bombs she placed for you… you lost this round 😢</p>
+    {% else %}
+    <p>Salome hit all the bombs you placed for her… she lost this round 😢</p>
+    {% endif %}
+
+    <a href="{{ url_for('game_start') }}" class="secret-button">Play Again</a>
+    <a href="{{ url_for('surprise') }}" class="secondary-link">Back to Surprise Page</a>
+</div>
+
+{% endblock %}

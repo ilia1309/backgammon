@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="game-setup">
+    <h1>Step 1: ilia Place Bombs on Salomes Grid 💣</h1>
+    <p>Choose 3 squares that will be bombs on Salomes board. don’t look 😉</p>
+
+    <form method="POST">
+        <div class="game-grid">
+            {% for i in range(9) %}
+            <label class="game-setup-cell">
+                <input type="checkbox" name="bomb" value="{{ i }}">
+                <span>{{ i + 1 }}</span>
+            </label>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="secret-button">Confirm</button>
+    </form>
+</div>
+
+{% endblock %}

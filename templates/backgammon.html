@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="bg-wrap">
+    <h1 class="bg-title">Backgammon 🎲</h1>
+    <p id="bgStatus" class="bg-status">Connecting…</p>
+
+    <div class="bg-topbar">
+        <div class="bg-pill" id="bgYou">You: —</div>
+        <div class="bg-pill" id="bgTurn">Turn: —</div>
+        <div class="bg-dice" id="bgDice">Dice: —</div>
+        <button class="secret-button" id="bgRollBtn">Roll</button>
+        <button class="secret-button" id="bgEndBtn">End Turn</button>
+        <button class="secret-button" id="bgUndoBtn">Undo</button>
+
+    </div>
+
+    <canvas id="bgCanvas" width="980" height="640" class="bg-canvas"></canvas>
+
+    <p class="bg-hint">
+        Click a point to pick a checker, then click a destination point. If you have checkers on the bar, you must enter
+        first.
+    </p>
+</div>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='backgammon.js') }}"></script>
+
+{% endblock %}

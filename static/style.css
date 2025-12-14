@@ -1,0 +1,984 @@
+/* Color palette */
+:root {
+    --navy: #0A1A2F;
+    --brown: #5A3E2B;
+    --butter: #F6E3B4;
+    --burgundy: #6A0C1C;
+    --beige: #F4EFE6;
+}
+
+/* Page background */
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--beige);
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    /* NEW */
+    color: var(--navy);
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+/* Navigation bar */
+nav {
+    background: var(--burgundy);
+    padding: 18px;
+    text-align: center;
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    border-bottom: 3px solid var(--brown);
+}
+
+nav a {
+    color: var(--butter);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+nav a:hover {
+    color: white;
+}
+
+/* ---------- CLEAN ROMANTIC HERO (NO IMAGE) ---------- */
+
+.hero-clean {
+    background: var(--beige);
+    padding: 120px 20px 80px 20px;
+    text-align: center;
+    border-bottom: 3px solid var(--burgundy);
+}
+
+.hero-clean h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 46px;
+    color: var(--burgundy);
+    margin: 0 0 10px 0;
+    animation: fadeIn 1s ease-out;
+}
+
+.hero-sub {
+    font-size: 18px;
+    color: var(--brown);
+    line-height: 1.6;
+    opacity: 0.9;
+    animation: fadeIn 1.4s ease-out;
+}
+
+/* Floating hearts animation */
+.floating-hearts {
+    margin-top: 25px;
+    position: relative;
+    height: 40px;
+}
+
+.floating-hearts span {
+    font-size: 22px;
+    position: absolute;
+    animation: floatUp 3s infinite ease-in-out;
+    opacity: 0.8;
+}
+
+.floating-hearts span:nth-child(1) {
+    left: 40%;
+    animation-delay: 0s;
+}
+
+.floating-hearts span:nth-child(2) {
+    left: 50%;
+    animation-delay: 0.4s;
+}
+
+.floating-hearts span:nth-child(3) {
+    left: 60%;
+    animation-delay: 0.8s;
+}
+
+/* Heart animation */
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: translateY(-15px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+}
+
+
+/* Box for home page text */
+.home-box {
+    background: white;
+    padding: 30px;
+    max-width: 700px;
+    margin: 40px auto;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--butter);
+    font-size: 20px;
+    line-height: 1.7;
+}
+
+/* ---------- STORY PAGE ---------- */
+
+.story-header {
+    text-align: center;
+    padding: 50px 20px 20px;
+}
+
+.story-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    color: var(--burgundy);
+}
+
+.story-header p {
+    font-size: 18px;
+    color: var(--brown);
+    opacity: 0.85;
+}
+
+.story-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 25px 60px;
+}
+
+.story-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    line-height: 1.65;
+    color: var(--brown);
+    font-size: 18px;
+}
+
+.story-card p {
+    margin-bottom: 18px;
+}
+
+.story-card strong {
+    color: var(--burgundy);
+}
+
+.story-love {
+    text-align: center;
+    font-size: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--burgundy);
+    margin-top: 40px;
+}
+
+
+/* ---------- GALLERY PAGE ---------- */
+
+.gallery-header {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.gallery-header h1 {
+    font-family: 'Allura', cursive;
+    font-size: 60px;
+    color: var(--burgundy);
+}
+
+.gallery-header p {
+    font-size: 20px;
+    color: var(--brown);
+    opacity: 0.8;
+}
+
+/* photo grid (responsive) */
+.gallery-grid {
+    width: 90%;
+    margin: 40px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+}
+
+/* photo cards */
+.photo-card img {
+    width: 100%;
+    height: 280px;
+    /* controls uniform height */
+    object-fit: cover;
+    /* crops edges but keeps shape */
+    border-radius: 15px;
+}
+
+
+.photo-card img {
+    width: 100%;
+    height: 280px;
+    /* same height */
+    object-fit: cover;
+    /* keeps ratio but crops edges */
+    border-radius: 15px;
+}
+
+
+
+/* fade */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.caption {
+    margin-top: 8px;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--brown);
+    text-align: center;
+    opacity: 0.9;
+}
+
+
+/* ---------- LOVE LETTER PAGE ---------- */
+
+.letter-container {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.letter-header {
+    text-align: center;
+    padding: 50px 20px 25px;
+}
+
+.letter-header {
+    text-align: center;
+    padding: 50px 20px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* centers horizontally */
+    justify-content: center;
+    /* centers vertically if needed */
+}
+
+
+.letter-title {
+    font-family: 'Allura', cursive;
+    font-size: 60px;
+    color: var(--burgundy);
+    margin-bottom: 30px;
+}
+
+.letter-box {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    width: 70%;
+    margin: auto;
+    border: 3px solid var(--butter);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    animation: fadeIn 1s ease;
+}
+
+.letter-box p {
+    font-size: 20px;
+    color: var(--brown);
+    line-height: 1.9;
+    margin-bottom: 25px;
+    font-family: 'Playfair Display', serif;
+}
+
+.signature {
+    font-family: 'Allura', cursive;
+    font-size: 40px;
+    color: var(--burgundy);
+    margin-top: 40px;
+    opacity: 0.9;
+}
+
+.letter-note {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 18px;
+    color: var(--navy);
+    opacity: 0.9;
+    font-style: italic;
+    line-height: 1.6;
+}
+
+
+/* fade animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- SURPRISE PAGE ---------- */
+
+.surprise-container {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.surprise-title {
+    font-family: 'Allura', cursive;
+    font-size: 60px;
+    color: var(--burgundy);
+    margin-bottom: 20px;
+}
+
+.surprise-text {
+    font-size: 20px;
+    color: var(--brown);
+    opacity: 0.9;
+    margin-bottom: 30px;
+}
+
+/* Heart reveal */
+.heart-wrapper {
+    cursor: pointer;
+    display: inline-block;
+    margin-bottom: 30px;
+}
+
+.heart {
+    font-size: 70px;
+    transition: transform 0.3s ease;
+}
+
+.heart:hover {
+    transform: scale(1.1);
+}
+
+.pop {
+    animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.4);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Hidden content */
+.hidden-message {
+    display: none;
+    background: white;
+    padding: 30px;
+    max-width: 700px;
+    margin: 20px auto;
+    border-radius: 20px;
+    border: 3px solid var(--butter);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    animation: fadeIn 1s ease;
+}
+
+.hidden-message h2 {
+    color: var(--navy);
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.secret-button {
+    display: inline-block;
+    margin-top: 20px;
+    background: var(--burgundy);
+    padding: 12px 30px;
+    border-radius: 12px;
+    color: var(--butter);
+    font-size: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.secret-button:hover {
+    background: var(--navy);
+    color: white;
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- GAME STYLES ---------- */
+
+.game-setup {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.game-setup h1 {
+    font-family: 'Allura', cursive;
+    font-size: 50px;
+    color: var(--burgundy);
+}
+
+.game-setup p {
+    font-size: 18px;
+    color: var(--brown);
+    margin-bottom: 20px;
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    gap: 20px;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+.game-setup-cell {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 12px;
+    border: 2px solid var(--butter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--navy);
+}
+
+/* Smooth animation */
+.game-setup-cell {
+    transition: 0.15s ease-in-out;
+    transform-origin: center;
+}
+
+
+/* When selected */
+.game-setup-cell:has(input:checked) {
+    background: var(--burgundy);
+    border-color: var(--navy);
+    transform: scale(1.1);
+    /* pop */
+    box-shadow: 0 0 12px rgba(106, 12, 28, 0.5);
+    /* glowing burgundy */
+}
+
+/* Text color when selected */
+.game-setup-cell:has(input:checked) span {
+    color: white;
+}
+
+
+.game-setup-cell input {
+    display: none;
+}
+
+.game-setup-cell span {
+    pointer-events: none;
+}
+
+/* Mini heart animation */
+.game-setup-cell:has(input:checked)::after {
+    content: "❤️";
+    position: absolute;
+    font-size: 20px;
+    animation: heartPop 0.5s ease-out forwards;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes heartPop {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: translate(-50%, -80%) scale(1.3);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -120%) scale(0.9);
+        opacity: 0;
+    }
+}
+
+/* pressed effect when checkbox is checked (optional JS could improve, but fine for now) */
+
+
+/* main game view */
+
+.game-container {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.game-hp {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.game-turn {
+    font-size: 18px;
+    margin-bottom: 25px;
+    color: var(--brown);
+}
+
+.boards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.board h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.game-cell {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 12px;
+    border: 2px solid var(--butter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+.cell-button {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* game note */
+
+.game-note {
+    font-size: 16px;
+    color: var(--brown);
+    opacity: 0.8;
+    margin-top: 15px;
+}
+
+/* game over */
+
+.game-over {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.game-over h1 {
+    font-family: 'Allura', cursive;
+    font-size: 50px;
+    color: var(--burgundy);
+    margin-bottom: 20px;
+}
+
+.game-over p {
+    font-size: 20px;
+    color: var(--brown);
+    margin-bottom: 25px;
+}
+
+.secondary-link {
+    display: inline-block;
+    margin-left: 15px;
+    font-size: 16px;
+    color: var(--navy);
+    text-decoration: none;
+}
+
+/* Entire square visual */
+.game-setup-cell {
+    width: 90px;
+    height: 90px;
+    background: white;
+    border-radius: 12px;
+    border: 3px solid var(--butter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--navy);
+    position: relative;
+    transition: 0.15s ease-in-out;
+}
+
+/* Hover effect */
+.game-setup-cell:hover {
+    background: var(--butter);
+    transform: scale(1.04);
+}
+
+/* When selected (BOMB CHOSEN) */
+.game-setup-cell:has(input:checked) {
+    background: var(--burgundy);
+    border-color: var(--navy);
+    transform: scale(1.07);
+}
+
+/* Text inside selected */
+.game-setup-cell:has(input:checked) span {
+    color: white;
+}
+
+/* Keep your original styles */
+.game-setup-cell input {
+    display: none;
+    /* Hidden checkbox */
+}
+
+.game-setup-cell span {
+    pointer-events: none;
+    /* Number stays clickable */
+    font-size: 22px;
+}
+
+/* ---------- NEW PREMIUM NAVBAR ---------- */
+
+.nav-bar {
+    background: var(--butter);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-bar a {
+    color: var(--navy);
+}
+
+.nav-bar a:hover {
+    color: var(--burgundy);
+}
+
+.nav-bar a::after {
+    background-color: var(--burgundy);
+}
+
+
+
+
+/* Animated underline */
+.nav-bar a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 0%;
+    background-color: var(--burgundy);
+    transition: 0.3s ease-in-out;
+}
+
+.nav-bar a:hover::after {
+    width: 100%;
+}
+
+.nav-bar a:hover {
+    color: var(--burgundy);
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width: 600px) {
+    .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .gallery-item img {
+        border-radius: 12px;
+    }
+
+    .game-grid {
+        grid-template-columns: repeat(3, 70px);
+        gap: 10px;
+    }
+
+    .game-cell,
+    .game-setup-cell {
+        width: 70px;
+        height: 70px;
+    }
+
+    .cell-button {
+        width: 100%;
+        height: 100%;
+    }
+
+    .secret-button {
+        font-size: 16px;
+        padding: 12px 16px;
+    }
+
+    a.secondary-link {
+        font-size: 14px;
+    }
+
+
+
+    body {
+        font-size: 15px;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    .nav-bar {
+        gap: 15px;
+        padding: 12px 10px;
+    }
+
+    .nav-bar a {
+        font-size: 15px;
+    }
+
+    .hero-clean {
+        padding: 80px 10px 60px 10px;
+    }
+
+    .hero-clean h1 {
+        font-size: 34px;
+    }
+
+    .hero-sub {
+        font-size: 16px;
+    }
+}
+
+/* LIGHTBOX (IMAGE POPUP) */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s ease;
+    z-index: 9999;
+}
+
+.lightbox.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
+    animation: zoomIn 0.25s ease-out;
+}
+
+/* Smooth pop animation */
+@keyframes zoomIn {
+    from {
+        transform: scale(0.7);
+        opacity: 0.5;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ---- FINAL OVERRIDES FOR CENTERING ---- */
+
+/* Center all main titles everywhere */
+h1,
+h2,
+h3 {
+    text-align: center !important;
+}
+
+/* Make page sections' headers centered */
+.story-header,
+.gallery-header,
+.letter-header {
+    text-align: center !important;
+}
+
+/* Center containers on the page */
+.story-container,
+.gallery-grid,
+.letter-container {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Center the cards themselves in the middle */
+.story-card,
+.letter-box {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Make hero section content centered */
+.hero-clean {
+    text-align: center !important;
+}
+
+
+/* ----- BACKGAMMON ----- */
+.bg-wrap {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.bg-title {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--burgundy);
+    font-size: 46px;
+}
+
+.bg-status {
+    color: var(--brown);
+    margin: 10px 0 18px;
+    opacity: .9;
+}
+
+.bg-topbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.bg-pill {
+    background: white;
+    border: 2px solid var(--butter);
+    border-radius: 14px;
+    padding: 10px 14px;
+    color: var(--navy);
+    font-weight: 600;
+}
+
+.bg-dice {
+    background: var(--butter);
+    border: 2px solid var(--brown);
+    border-radius: 14px;
+    padding: 10px 14px;
+    color: var(--navy);
+    font-weight: 700;
+}
+
+.bg-canvas {
+    width: min(980px, 96vw);
+    height: auto;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .12);
+}
+
+.bg-hint {
+    max-width: 900px;
+    margin: 14px auto 0;
+    color: var(--brown);
+    opacity: .85;
+}
+
+.bg-canvas {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.bg-topbar,
+.bg-hint,
+.bg-title,
+.bg-status {
+    position: relative;
+    z-index: 1;
+}
+
+.bg-canvas {
+    cursor: pointer;
+    user-select: none;
+}
+
+.bg-canvas:active {
+    cursor: grabbing;
+}
+
+.bg-canvas {
+    background: radial-gradient(circle at center, #f9e9c8 0%, #f0d9a6 100%);
+}
+
+.bg-canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
