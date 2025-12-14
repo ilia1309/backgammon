@@ -4,12 +4,17 @@ import random
 import uuid
 import os
 
-
 app = Flask(__name__)
 app.secret_key = "super_secret_anniversary_key"
 
-# threading = fewer mac/eventlet headaches
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
+# IMPORTANT: for Render/websockets use eventlet in production
+socketio = SocketIO(
+    app,
+    cors_allowed_origins="*",
+    async_mode="eventlet",
+    ping_interval=25,
+    ping_timeout=60,
+)
 
 # ---------------- ROUTES ----------------
 
@@ -56,17 +61,15 @@ def roll_dice():
 
 
 def new_game():
-    # Model is ALWAYS White perspective (indices 0..23)
     p = [{"W": 0, "B": 0} for _ in range(24)]
 
-    # Classic start
-    # White: 2 on 23, 5 on 12, 3 on 7, 5 on 5
+    # White
     p[23]["W"] = 2
     p[12]["W"] = 5
     p[7]["W"]  = 3
     p[5]["W"]  = 5
 
-    # Black: 2 on 0, 5 on 11, 3 on 16, 5 on 18
+    # Black
     p[0]["B"]  = 2
     p[11]["B"] = 5
     p[16]["B"] = 3
@@ -77,10 +80,10 @@ def new_game():
         "bar": {"W": 0, "B": 0},
         "off": {"W": 0, "B": 0},
         "turn": "W",
-        "dice": [],          # dice for this turn (raw)
-        "dice_left": [],     # remaining dice to consume by moves
-        "rolled": False,     # rolled this turn?
-        "history": []        # undo snapshots
+        "dice": [],
+        "dice_left": [],
+        "rolled": False,
+        "history": []
     }
 
 
@@ -115,8 +118,6 @@ def dir_step(color):
 
 
 def entry_point(color, die):
-    # White enters: 24-die => 23..18
-    # Black enters: die-1 => 0..5
     return (24 - die) if color == "W" else (die - 1)
 
 
@@ -235,18 +236,15 @@ def apply_move(color, st, source, dest):
         if is_blocked(color, st, dest):
             return False, "Blocked."
 
-    # undo snapshot
     st["history"].append(snapshot(st))
     if len(st["history"]) > 80:
         st["history"].pop(0)
 
-    # remove from source
     if source == "BAR":
         st["bar"][color] -= 1
     else:
         st["points"][source][color] -= 1
 
-    # apply
     if dest == "OFF":
         st["off"][color] += 1
     else:
@@ -256,9 +254,7 @@ def apply_move(color, st, source, dest):
             st["bar"][o] += 1
         st["points"][dest][color] += 1
 
-    # consume die
     st["dice_left"].remove(used)
-
     return True, None
 
 
@@ -333,18 +329,16 @@ def bg_roll():
         emit("bg_status", {"msg": "Not your turn."}, to=sid)
         return
 
-    # ❌ already rolled this turn
     if st["rolled"]:
         emit("bg_status", {"msg": "You already rolled this turn."}, to=sid)
         return
 
     dice = roll_dice()
     st["dice"] = dice
-    st["dice_left"] = dice[:]   # ← IMPORTANT
+    st["dice_left"] = dice[:]
     st["rolled"] = True
 
     broadcast(room)
-
 
 
 @socketio.on("bg_select_source")
@@ -368,7 +362,6 @@ def bg_select_source(data):
 
     source = data.get("source")
     targets = legal_targets(color, st, source)
-
     emit("bg_select_result", {"source": source, "targets": targets}, to=sid)
 
 
@@ -399,7 +392,6 @@ def bg_move(data):
         emit("bg_status", {"msg": err}, to=sid)
         return
 
-    # win
     if st["off"][color] >= 15:
         socketio.emit("bg_status", {"msg": f"{'White' if color=='W' else 'Black'} wins! 🎉"}, room=room)
 
@@ -424,9 +416,7 @@ def bg_end():
     st["dice"] = []
     st["dice_left"] = []
     st["rolled"] = False
-
     broadcast(room)
-
 
 
 @socketio.on("bg_undo")
@@ -449,12 +439,7 @@ def bg_undo():
 
     snap = st["history"].pop()
     restore_from(st, snap)
-
-    # IMPORTANT: undo does NOT reset rolled
-    st["rolled"] = True  
-
     broadcast(room)
-
 
 
 # ---------------- RUN ----------------
@@ -467,4 +452,3 @@ if __name__ == "__main__":
         debug=False,
         allow_unsafe_werkzeug=True
     )
-

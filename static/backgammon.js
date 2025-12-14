@@ -6,21 +6,6 @@ const socket = io({
     reconnectionAttempts: Infinity
 });
 
-socket.on("connect", () => {
-    setStatus("Connected ✅");
-});
-
-socket.on("disconnect", () => {
-    setStatus("Disconnected — refresh once ⚠️");
-});
-
-socket.on("connect_error", () => {
-    setStatus("Waking server… wait 30s ⏳");
-});
-
-
-
-
 const cvs = document.getElementById("bgCanvas");
 const ctx = cvs.getContext("2d");
 
@@ -43,9 +28,7 @@ const rollBtn = document.getElementById("bgRollBtn");
 const endBtn = document.getElementById("bgEndBtn");
 const undoBtn = document.getElementById("bgUndoBtn");
 
-function setStatus(t) {
-    if (statusEl) statusEl.textContent = t;
-}
+function setStatus(t) { if (statusEl) statusEl.textContent = t; }
 
 /* ================= STATE ================= */
 
@@ -53,10 +36,10 @@ let state = null;
 let myColor = null;
 let selectedView = null;
 let legalTargetsView = [];
+
 let rollingDice = false;
 let rollingValues = [];
 let rollAnimFrame = null;
-
 
 /* ================= MODEL ↔ VIEW ================= */
 
@@ -64,7 +47,6 @@ function modelToView(p) {
     if (p === "BAR" || p === "OFF") return p;
     return myColor === "W" ? p : 23 - p;
 }
-
 function viewToModel(p) {
     if (p === "BAR" || p === "OFF") return p;
     return myColor === "W" ? p : 23 - p;
@@ -74,7 +56,7 @@ function viewToModel(p) {
 
 function geom(v) {
     const top = v >= 12;
-    let col = top ? (v - 12) : (11 - v);
+    const col = top ? (v - 12) : (11 - v);
 
     let x = BOARD.x + col * POINT_W;
     if (col >= 6) x += BAR_GAP;
@@ -93,7 +75,6 @@ function hitTest(mx, my) {
         const { x, top } = geom(v);
         const y1 = top ? BOARD.y : CENTER_Y + 10;
         const y2 = top ? CENTER_Y - 10 : BOARD.y + BOARD.h;
-
         if (mx >= x && mx <= x + POINT_W && my >= y1 && my <= y2) return v;
     }
     return null;
@@ -128,8 +109,46 @@ function drawChecker(x, y, color, selected) {
         ctx.lineWidth = 4;
         ctx.stroke();
     }
-
     ctx.lineWidth = 1;
+}
+
+function drawDie(x, y, value) {
+    const size = 44;
+    const r = 8;
+
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + size, y, x + size, y + size, r);
+    ctx.arcTo(x + size, y + size, x, y + size, r);
+    ctx.arcTo(x, y + size, x, y, r);
+    ctx.arcTo(x, y, x + size, y, r);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.strokeStyle = "#0A1A2F";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = "#111";
+    const d = size / 4;
+    const cx = x + size / 2;
+    const cy = y + size / 2;
+
+    const dots = {
+        1: [[0, 0]],
+        2: [[-1, -1], [1, 1]],
+        3: [[-1, -1], [0, 0], [1, 1]],
+        4: [[-1, -1], [-1, 1], [1, -1], [1, 1]],
+        5: [[-1, -1], [-1, 1], [0, 0], [1, -1], [1, 1]],
+        6: [[-1, -1], [-1, 0], [-1, 1], [1, -1], [1, 0], [1, 1]]
+    };
+
+    (dots[value] || []).forEach(([dx, dy]) => {
+        ctx.beginPath();
+        ctx.arc(cx + dx * d, cy + dy * d, 4, 0, Math.PI * 2);
+        ctx.fill();
+    });
 }
 
 /* ================= DRAW ================= */
@@ -144,12 +163,11 @@ function draw() {
     roundRect(20, 20, 940, 600, 18, "#6B3F26");
     roundRect(32, 32, 916, 576, 14, "#F6E3B4");
 
-    // 🔒 CLIP EVERYTHING INSIDE THE BOARD
+    // CLIP INSIDE BOARD so triangles never overflow
     ctx.save();
     ctx.beginPath();
     ctx.rect(BOARD.x, BOARD.y, BOARD.w, BOARD.h);
     ctx.clip();
-
 
     // bar
     const barX = BOARD.x + 6 * POINT_W;
@@ -163,14 +181,10 @@ function draw() {
     for (let v = 0; v < 24; v++) {
         const { x, top } = geom(v);
 
-        const baseY = top ? BOARD.y : BOARD.y + BOARD.h;
-        const tipY = top
-            ? BOARD.y + TRIANGLE_HEIGHT
-            : BOARD.y + BOARD.h - TRIANGLE_HEIGHT;
-
+        const baseY = top ? BOARD.y : (BOARD.y + BOARD.h);
+        const tipY = top ? (BOARD.y + TRIANGLE_HEIGHT) : (BOARD.y + BOARD.h - TRIANGLE_HEIGHT);
 
         ctx.fillStyle = (v % 2 === 0) ? "#7A1426" : "#0A1A2F";
-
         ctx.beginPath();
         ctx.moveTo(x, baseY);
         ctx.lineTo(x + POINT_W, baseY);
@@ -181,19 +195,29 @@ function draw() {
         if (legalTargetsView.includes(v)) {
             ctx.globalAlpha = 0.25;
             ctx.fillStyle = "#ffffff";
-            ctx.fillRect(x + 6, top ? 36 : CENTER_Y + 14, POINT_W - 12, TRIANGLE_HEIGHT - 20);
+            ctx.fillRect(
+                x + 6,
+                top ? (BOARD.y + 4) : (CENTER_Y + 14),
+                POINT_W - 12,
+                TRIANGLE_HEIGHT - 18
+            );
             ctx.globalAlpha = 1;
         }
 
         if (selectedView === v) {
             ctx.strokeStyle = "#ffffff";
             ctx.lineWidth = 4;
-            ctx.strokeRect(x + 6, top ? 36 : CENTER_Y + 14, POINT_W - 12, TRIANGLE_HEIGHT - 20);
+            ctx.strokeRect(
+                x + 6,
+                top ? (BOARD.y + 4) : (CENTER_Y + 14),
+                POINT_W - 12,
+                TRIANGLE_HEIGHT - 18
+            );
             ctx.lineWidth = 1;
         }
     }
 
-    // checkers
+    // checkers (stick to board, not floating)
     for (let model = 0; model < 24; model++) {
         const stack = state.points[model];
         const color = stack.W > 0 ? "W" : stack.B > 0 ? "B" : null;
@@ -204,13 +228,11 @@ function draw() {
         const { x, top } = geom(v);
         const cx = x + POINT_W / 2;
 
-        for (let k = 0; k < Math.min(count, 6); k++) {
-            const startTop = BOARD.y + 28;
-            const startBottom = BOARD.y + BOARD.h - 28;
+        const startTop = BOARD.y + 28;
+        const startBottom = BOARD.y + BOARD.h - 28;
 
-            const cy = top
-                ? startTop + k * 44
-                : startBottom - k * 44;
+        for (let k = 0; k < Math.min(count, 6); k++) {
+            const cy = top ? (startTop + k * 44) : (startBottom - k * 44);
 
             ctx.beginPath();
             ctx.arc(cx + 2, cy + 2, 22, 0, Math.PI * 2);
@@ -221,13 +243,19 @@ function draw() {
         }
     }
 
-    // ================= DICE VISUALS =================
-    if ((rollingDice && rollingValues.length) || (state.dice_left && state.dice_left.length)) {
-        const dice = rollingDice ? rollingValues : state.dice_left;
+    // bar checkers
+    const bx = barX + BAR_GAP / 2;
+    for (let k = 0; k < Math.min(state.bar.W, 6); k++) drawChecker(bx, 120 + k * 44, "W", false);
+    for (let k = 0; k < Math.min(state.bar.B, 6); k++) drawChecker(bx, BOARD.y + BOARD.h - 120 - k * 44, "B", false);
 
+    // STOP clipping before dice/text
+    ctx.restore();
+
+    // dice visuals centered
+    const dice = rollingDice ? rollingValues : (state.dice_left || []);
+    if (dice.length) {
         const DICE_SIZE = 44;
         const GAP = 12;
-
         const totalWidth = dice.length * DICE_SIZE + (dice.length - 1) * GAP;
         const startX = cvs.width / 2 - totalWidth / 2;
         const y = CENTER_Y - DICE_SIZE / 2;
@@ -237,20 +265,10 @@ function draw() {
         });
     }
 
-
-
-    // bar checkers
-    const bx = barX + BAR_GAP / 2;
-    for (let k = 0; k < Math.min(state.bar.W, 6); k++) drawChecker(bx, 120 + k * 44, "W");
-    for (let k = 0; k < Math.min(state.bar.B, 6); k++) drawChecker(bx, BOARD.y + BOARD.h - 120 - k * 44, "B");
-
-    youEl.textContent = `You: ${myColor === "W" ? "White" : "Black"}`;
-    turnEl.textContent = `Turn: ${state.turn === "W" ? "White" : "Black"}`;
-    diceEl.textContent = `Dice: ${state.dice_left?.length ? state.dice_left.join(", ") : "—"}`;
-
-    // 🔓 STOP CLIPPING
-    ctx.restore();
-
+    // UI text
+    if (youEl) youEl.textContent = `You: ${myColor === "W" ? "White" : "Black"}`;
+    if (turnEl) turnEl.textContent = `Turn: ${state.turn === "W" ? "White" : "Black"}`;
+    if (diceEl) diceEl.textContent = `Dice: ${state.dice_left?.length ? state.dice_left.join(", ") : "—"}`;
 }
 
 /* ================= INPUT ================= */
@@ -282,49 +300,32 @@ cvs.addEventListener("click", (e) => {
 
     selectedView = null;
     legalTargetsView = [];
+    draw();
 });
 
-function drawDie(x, y, value) {
-    const size = 44;
-    const r = 8;
+/* ================= DICE ANIMATION ================= */
 
-    // dice body
-    ctx.fillStyle = "#ffffff";
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + size, y, x + size, y + size, r);
-    ctx.arcTo(x + size, y + size, x, y + size, r);
-    ctx.arcTo(x, y + size, x, y, r);
-    ctx.arcTo(x, y, x + size, y, r);
-    ctx.closePath();
-    ctx.fill();
+function animateDiceRoll(finalValues) {
+    if (rollAnimFrame) cancelAnimationFrame(rollAnimFrame);
 
-    ctx.strokeStyle = "#0A1A2F";
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    rollingDice = true;
+    let frames = 18;
 
-    // dots
-    ctx.fillStyle = "#111";
-    const d = size / 4;
-    const cx = x + size / 2;
-    const cy = y + size / 2;
+    function tick() {
+        rollingValues = finalValues.map(() => Math.floor(Math.random() * 6) + 1);
+        draw();
+        frames--;
 
-    const dots = {
-        1: [[0, 0]],
-        2: [[-1, -1], [1, 1]],
-        3: [[-1, -1], [0, 0], [1, 1]],
-        4: [[-1, -1], [-1, 1], [1, -1], [1, 1]],
-        5: [[-1, -1], [-1, 1], [0, 0], [1, -1], [1, 1]],
-        6: [[-1, -1], [-1, 0], [-1, 1], [1, -1], [1, 0], [1, 1]]
-    };
-
-    dots[value].forEach(([dx, dy]) => {
-        ctx.beginPath();
-        ctx.arc(cx + dx * d, cy + dy * d, 4, 0, Math.PI * 2);
-        ctx.fill();
-    });
+        if (frames > 0) {
+            rollAnimFrame = requestAnimationFrame(tick);
+        } else {
+            rollingDice = false;
+            rollingValues = [];
+            draw();
+        }
+    }
+    tick();
 }
-
 
 /* ================= SOCKET ================= */
 
@@ -332,6 +333,9 @@ socket.on("connect", () => {
     setStatus("Connected ✅");
     socket.emit("bg_join");
 });
+
+socket.on("disconnect", () => setStatus("Disconnected — refresh once ⚠️"));
+socket.on("connect_error", () => setStatus("Waking server… wait 30s ⏳"));
 
 socket.on("bg_status", p => setStatus(p.msg));
 
@@ -344,8 +348,7 @@ socket.on("bg_state", (p) => {
     const prevDice = state?.dice_left?.length || 0;
     state = p.state;
 
-    // 🎲 trigger animation only when dice appear
-    if (!rollingDice && prevDice === 0 && state.dice_left.length > 0) {
+    if (!rollingDice && prevDice === 0 && state.dice_left && state.dice_left.length > 0) {
         animateDiceRoll(state.dice_left);
     }
 
@@ -354,38 +357,14 @@ socket.on("bg_state", (p) => {
     draw();
 });
 
-
 socket.on("bg_select_result", p => {
     selectedView = modelToView(p.source);
     legalTargetsView = (p.targets || []).map(modelToView);
     draw();
 });
 
-rollBtn.onclick = () => {
-    socket.emit("bg_roll");
-};
+/* ================= BUTTONS ================= */
 
-endBtn.onclick = () => socket.emit("bg_end");
+if (rollBtn) rollBtn.onclick = () => socket.emit("bg_roll");
+if (endBtn) endBtn.onclick = () => socket.emit("bg_end");
 if (undoBtn) undoBtn.onclick = () => socket.emit("bg_undo");
-
-
-function animateDiceRoll(finalValues) {
-    rollingDice = true;
-    let frames = 18; // ~300ms animation
-
-    function tick() {
-        rollingValues = finalValues.map(() => Math.floor(Math.random() * 6) + 1);
-        draw();
-
-        frames--;
-        if (frames > 0) {
-            rollAnimFrame = requestAnimationFrame(tick);
-        } else {
-            rollingDice = false;
-            rollingValues = [];
-            draw();
-        }
-    }
-
-    tick();
-}
