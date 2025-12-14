@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
 import random
 import uuid
+import os
+
 
 app = Flask(__name__)
 app.secret_key = "super_secret_anniversary_key"
@@ -457,6 +459,12 @@ def bg_undo():
 
 # ---------------- RUN ----------------
 
-# DO NOT run socketio.run() manually on Render
-# Gunicorn will start the app
+if __name__ == "__main__":
+    socketio.run(
+        app,
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 5050)),
+        debug=False,
+        allow_unsafe_werkzeug=True
+    )
 

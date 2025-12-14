@@ -1,6 +1,23 @@
 const socket = io({
-    transports: ["websocket"]
+    transports: ["websocket"],
+    upgrade: false,
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionAttempts: Infinity
 });
+
+socket.on("connect", () => {
+    setStatus("Connected ✅");
+});
+
+socket.on("disconnect", () => {
+    setStatus("Disconnected — refresh once ⚠️");
+});
+
+socket.on("connect_error", () => {
+    setStatus("Waking server… wait 30s ⏳");
+});
+
 
 
 
