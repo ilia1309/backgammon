@@ -982,3 +982,12 @@ h3 {
     display: block;
     margin: 0 auto;
 }
+
+/* Backgammon mobile fix */
+.bg-canvas {
+    width: 100%;
+    max-width: 980px;
+    height: auto;
+    touch-action: none;
+    /* allow custom touch */
+}

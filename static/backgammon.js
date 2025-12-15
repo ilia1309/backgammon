@@ -6,8 +6,42 @@ const socket = io({
     reconnectionAttempts: Infinity
 });
 
+const IS_MOBILE = window.innerWidth <= 768;
+
+
 const cvs = document.getElementById("bgCanvas");
 const ctx = cvs.getContext("2d");
+
+function getCanvasScale() {
+    const rect = cvs.getBoundingClientRect();
+    return {
+        scaleX: cvs.width / rect.width,
+        scaleY: cvs.height / rect.height
+    };
+}
+
+function resizeCanvas() {
+    if (IS_MOBILE) {
+        const scale = window.innerWidth / 1000; // base design ≈1000px wide
+
+        cvs.width = 1000 * scale;
+        cvs.height = 700 * scale;
+
+        ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    } else {
+        cvs.width = 1000;
+        cvs.height = 700;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+
+    draw();
+}
+
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+
+
 
 /* ================= CONSTANTS ================= */
 
@@ -277,7 +311,13 @@ cvs.addEventListener("click", (e) => {
     if (!state || !myColor) return;
 
     const r = cvs.getBoundingClientRect();
-    const hit = hitTest(e.clientX - r.left, e.clientY - r.top);
+    const { scaleX, scaleY } = getCanvasScale();
+
+    const mx = (e.clientX - r.left) * scaleX;
+    const my = (e.clientY - r.top) * scaleY;
+
+    const hit = hitTest(mx, my);
+
     if (hit === null) return;
 
     if (selectedView === hit) {
@@ -368,3 +408,42 @@ socket.on("bg_select_result", p => {
 if (rollBtn) rollBtn.onclick = () => socket.emit("bg_roll");
 if (endBtn) endBtn.onclick = () => socket.emit("bg_end");
 if (undoBtn) undoBtn.onclick = () => socket.emit("bg_undo");
+cvs.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+
+    if (!state || !myColor) return;
+
+    const touch = e.touches[0];
+    const r = cvs.getBoundingClientRect();
+    const { scaleX, scaleY } = getCanvasScale();
+
+    const mx = (touch.clientX - r.left) * scaleX;
+    const my = (touch.clientY - r.top) * scaleY;
+
+    const hit = hitTest(mx, my);
+    if (hit === null) return;
+
+    if (selectedView === hit) {
+        selectedView = null;
+        legalTargetsView = [];
+        draw();
+        return;
+    }
+
+    if (selectedView === null) {
+        selectedView = hit;
+        socket.emit("bg_select_source", {
+            source: viewToModel(hit)
+        });
+        return;
+    }
+
+    socket.emit("bg_move", {
+        source: viewToModel(selectedView),
+        dest: viewToModel(hit)
+    });
+
+    selectedView = null;
+    legalTargetsView = [];
+    draw();
+}, { passive: false });
