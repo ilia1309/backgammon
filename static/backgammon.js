@@ -282,12 +282,21 @@ function draw() {
 }
 
 /* ================= INPUT ================= */
+function getCanvasPos(clientX, clientY) {
+    const rect = cvs.getBoundingClientRect();
+    const scaleX = cvs.width / rect.width;
+    const scaleY = cvs.height / rect.height;
 
+    return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+    };
+}
 cvs.addEventListener("click", (e) => {
     if (!state || !myColor) return;
 
-    const r = cvs.getBoundingClientRect();
-    const hit = hitTest(e.clientX - r.left, e.clientY - r.top);
+    const { x, y } = getCanvasPos(e.clientX, e.clientY);
+    const hit = hitTest(x, y);
     if (hit === null) return;
 
     if (selectedView === hit) {
@@ -312,6 +321,39 @@ cvs.addEventListener("click", (e) => {
     legalTargetsView = [];
     draw();
 });
+cvs.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    if (!state || !myColor) return;
+
+    const t = e.touches[0];
+    const { x, y } = getCanvasPos(t.clientX, t.clientY);
+    const hit = hitTest(x, y);
+    if (hit === null) return;
+
+    if (selectedView === hit) {
+        selectedView = null;
+        legalTargetsView = [];
+        draw();
+        return;
+    }
+
+    if (selectedView === null) {
+        selectedView = hit;
+        socket.emit("bg_select_source", { source: viewToModel(hit) });
+        return;
+    }
+
+    socket.emit("bg_move", {
+        source: viewToModel(selectedView),
+        dest: viewToModel(hit)
+    });
+
+    selectedView = null;
+    legalTargetsView = [];
+    draw();
+}, { passive: false });
+
+
 
 /* ================= DICE ANIMATION ================= */
 
